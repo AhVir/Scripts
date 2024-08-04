@@ -1,28 +1,30 @@
 #!/bin/bash
 
+# Define log file
+LOGFILE="/home/tanvir/gitpush.log"
+
 # List of your repositories
 repos=(
-    "/home/tanvir/Documents/ObsidianMD"   # for obsidian backup
-    "/home/tanvir/0_Codes/ps"    #problem-solving
+    "/home/tanvir/0_Codes/ps"
+    "/home/tanvir/Documents/ObsidianMD/"
 )
 
 # Loop through each repository
 for repo in "${repos[@]}"; do
     cd "$repo" || continue
 
-    echo "Checking $repo..."
+    echo "$(date): Checking $repo..." >> "$LOGFILE"
 
     # Fetch latest changes from remote
-    git fetch
+    git fetch >> "$LOGFILE" 2>&1
 
     # Check for changes
     if [[ $(git status --porcelain) ]]; then
-        echo "Changes detected in $repo. Pushing..."
-        git add .
-        git commit -m "Automated commit message"
-        git push
+        echo "$(date): Changes detected in $repo. Pushing..." >> "$LOGFILE"
+        git add . >> "$LOGFILE" 2>&1
+        git commit -m "Automated commit message" >> "$LOGFILE" 2>&1
+        git push >> "$LOGFILE" 2>&1
     else
-        echo "No changes in $repo."
+        echo "$(date): No changes in $repo." >> "$LOGFILE"
     fi
 done
-
